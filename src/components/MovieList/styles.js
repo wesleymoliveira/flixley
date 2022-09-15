@@ -8,7 +8,6 @@ export default makeStyles((theme) => ({
     overflow: 'auto',
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'center',
-    }
-    ,
+    },
   },
 }));
