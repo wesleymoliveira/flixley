@@ -3,7 +3,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export const genreIdOrCategoryName = createSlice({
-  name: 'genreIdOrCategoryName',
+  name: 'user',
   initialState: {
     genreIdOrCategoryName: '',
     page: 1,

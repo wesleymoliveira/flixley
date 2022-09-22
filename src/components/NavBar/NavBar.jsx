@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppBar, IconButton, Toolbar, Button, Avatar, useMediaQuery, Drawer } from '@mui/material';
 import { Menu as MenuIcon, AccountCircle, Brightness4, Brightness7 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
@@ -7,13 +8,39 @@ import { useTheme } from '@mui/material/styles';
 import useStyles from './styles';
 import Sidebar from '../Sidebar/Sidebar';
 import Search from '../Search/Search';
+import { fetchToken, createSessionId, moviesApi } from '../../utils';
+import { setUser, userSelector } from '../../features/auth';
 
 function NavBar() {
   const classes = useStyles();
   const isMobile = useMediaQuery('(max-width:600px)');
   const theme = useTheme();
-  const isAuthenticated = true;
+  const dispatch = useDispatch();
+  const { isAuthenticated, user } = useSelector(userSelector);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const token = localStorage.getItem('request_token');
+  const localStorageSessionId = localStorage.getItem('session_id');
+
+  console.log('user', user);
+
+  useEffect(() => {
+    const logInUser = async () => {
+      if (token) {
+        if (localStorageSessionId) {
+          const { data } = await moviesApi.get(`/account?session_id=${localStorageSessionId}`);
+
+          dispatch(setUser(data));
+        } else {
+          const sessionId = await createSessionId();
+          const { data } = await moviesApi.get(`/account?session_id=${sessionId}`);
+
+          dispatch(setUser(data));
+        }
+      }
+    };
+    logInUser();
+  }, [token]);
 
   return (
     <>
@@ -46,7 +73,7 @@ function NavBar() {
             !isAuthenticated ? (
               <Button
                 color="inherit"
-                onClick={() => {}}
+                onClick={fetchToken}
               >
                 Login &nbsp; <AccountCircle />
               </Button>
@@ -54,7 +81,7 @@ function NavBar() {
               <Button
                 color="inherit"
                 component={Link}
-                to="/profile/idblabla"
+                to={`/profile/${user.id}`}
                 className={classes.linlButton}
                 onClick={() => {}}
               >
