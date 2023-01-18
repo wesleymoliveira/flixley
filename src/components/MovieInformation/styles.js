@@ -47,4 +47,18 @@ export default makeStyles((theme) => ({
     marginRight: '10px',
     marginLeft: '10px',
   },
+  castImage: {
+    width: '100%',
+    maxWidth: '6em',
+    height: '8em',
+    objectFit: 'cover',
+    borderRadius: '10px',
+  },
+  buttonsContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
+  },
 }));
