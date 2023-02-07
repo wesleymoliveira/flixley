@@ -28,8 +28,16 @@ export default makeStyles((theme) => ({
   },
   image: {
     borderRadius: '20px',
-    height: '300px',
+    height: '350px',
     marginBottom: '10px',
+
+    [theme.breakpoints.up('lg')]: {
+      height: '330px',
+    },
+
+    [theme.breakpoints.up('xl')]: {
+      height: '450px',
+    },
 
     '&:hover': {
       transform: 'scale(1.05)',

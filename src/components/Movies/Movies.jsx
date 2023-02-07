@@ -44,9 +44,9 @@ function Movies() {
   }
 
   return (
-    <div><MovieList movies={data} />
+    <div><MovieList movies={data} numberOfMovies={data?.results?.length} />
       <Box display="flex" justifyContent="center" mt="20px">
-        <Pagination count={data?.total_pages} page={page} onChange={handlePageChange} color="primary" />
+        <Pagination count={data.total_pages} page={page} onChange={handlePageChange} color="primary" />
       </Box>
     </div>
   );
