@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useParams, useHistory, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   Typography,
   Button,
   Grid,
   Box,
   CircularProgress,
-  useMediaQuery,
+  Pagination,
 
 } from '@mui/material';
 import {
@@ -22,12 +22,15 @@ import useStyles from './styles';
 import MovieList from '../MovieList/MovieList';
 
 function Actors() {
-  const page = 1;
+  const [page, setPage] = useState(1);
   const { id } = useParams();
   const { data, isFetching, error } = useGetActorDetailsQuery(id);
   const { data: moviesByActor, isFetching: moviesByActorIsFetching, error: moviesByActorError } = useGetMoviesByActorQuery({ id, page });
 
   const classes = useStyles();
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
 
   if (isFetching || moviesByActorIsFetching) {
     return (
@@ -85,7 +88,12 @@ function Actors() {
           Movies
         </Typography>
         {moviesByActor && !moviesByActorError && (
-          <MovieList movies={moviesByActor} numberOfMovies={12} />
+          <>
+            <MovieList movies={moviesByActor} numberOfMovies={12} />
+            <Box display="flex" justifyContent="center" mt="20px">
+              <Pagination count={moviesByActor?.total_pages} page={page} onChange={handlePageChange} color="primary" />
+            </Box>
+          </>
         )}
       </Box>
     </>
