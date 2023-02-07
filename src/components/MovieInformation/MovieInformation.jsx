@@ -54,7 +54,7 @@ function MovieInformation() {
       <Box
         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
-        <CircularProgress size="8rem" />;
+        <CircularProgress size="8rem" />
       </Box>
     );
   }
@@ -83,7 +83,7 @@ function MovieInformation() {
 
   return (
     <Grid container className={classes.containerSpaceRound}>
-      <Grid item sm={12} lg={4}>
+      <Grid item sm={12} lg={4} justifyContent="center" display="flex">
         <img
           className={classes.poster}
           src={`https://image.tmdb.org/t/p/w500/${data?.poster_path}`}

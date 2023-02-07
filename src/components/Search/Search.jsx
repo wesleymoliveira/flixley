@@ -10,8 +10,11 @@ import { searchMovie } from '../../features/currentGenreIdOrCategoryName';
 function Search() {
   const [query, setQuery] = useState('');
   const classes = useStyles();
+  const location = useLocation();
 
   const dispatch = useDispatch();
+
+  if (location.pathname !== '/') return null;
 
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
