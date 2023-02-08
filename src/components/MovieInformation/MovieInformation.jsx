@@ -44,17 +44,22 @@ function MovieInformation() {
   const { data, isFetching, error } = useGetMovieQuery(id);
   const { data: favoriteMovies } = useGetListQuery({ accountId: user.id, listName: 'favorite/movies', sessionId, page: 1 });
 
-  console.log('favoriteMovies', favoriteMovies);
-
   const { data: watchlistMovies } = useGetListQuery({ accountId: user.id, listName: 'watchlist/movies', sessionId, page: 1 });
   const {
     data: recomendedData,
     isFetching: recommendationsIsFetching,
     error: recommendationsError,
   } = useGetRecomendationsQuery({ movieId: id, list: '/recommendations' });
-
   const [isFavorited, setIsFavorited] = useState(false);
   const [isWatchListed, setIsWatchListed] = useState(true);
+
+  useEffect(() => {
+    if (!isFetching && isAuthenticated) {
+      setIsFavorited(!!favoriteMovies?.results?.find((movie) => movie?.id === data?.id));
+      setIsWatchListed(!!watchlistMovies?.results?.find((movie) => movie?.id === data?.id));
+    }
+  }, [watchlistMovies, favoriteMovies, data, isFetching, isAuthenticated]);
+
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -78,13 +83,6 @@ function MovieInformation() {
       </Box>
     );
   }
-
-  /* useEffect(() => {
-    if (!isFetching && isAuthenticated) {
-      setIsFavorited(!!favoriteMovies?.results?.find((movie) => movie?.id === data?.id));
-      setIsWatchListed(!!watchlistMovies?.results?.find((movie) => movie?.id === data?.id));
-    }
-  }, [watchlistMovies, favoriteMovies, data, isFetching, isAuthenticated]); */
 
   const addToFavorites = async () => {
     await axios.post(`https://api.themoviedb.org/3/account/${user.id}/favorite?api_key=${process.env.REACT_APP_TMDB_KEY}&session_id=${localStorage.getItem('session_id')}`, { media_type: 'movie', media_id: id, favorite: !isFavorited });
@@ -250,8 +248,7 @@ function MovieInformation() {
             <Grid item xs={12} sm={6} className={classes.buttonsContainer}>
 
               <ButtonGroup variant="outlined" size="medium">
-                {
-                isAuthenticated && (
+
                 <>
                   <Button
                     onClick={addToFavorites}
@@ -268,8 +265,7 @@ function MovieInformation() {
                     Watchlist
                   </Button>
                 </>
-                )
-                }
+
                 <Button
                   endIcon={<ArrowBack />}
                   sx={{ borderColor: 'primary.main' }}
