@@ -1,16 +1,18 @@
-import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Box, Typography, Button, CircularProgress } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { ExitToApp } from '@mui/icons-material';
 
 import { userSelector } from '../../features/auth';
+import { useGetListQuery } from '../../services/TMDB';
+import MovieList from '../MovieList/MovieList';
 
 function Profile() {
-  const { user } = useSelector(userSelector);
+  const { user, sessionId } = useSelector(userSelector);
 
-  const favoriteMovies = [];
+  const { data: favoriteMovies } = useGetListQuery({ accountId: user.id, listName: 'favorite/movies', sessionId, page: 1 });
 
-  console.log(user);
+  const { data: watchlistMovies } = useGetListQuery({ accountId: user.id, listName: 'watchlist/movies', sessionId, page: 1 });
 
   const logout = () => {
     localStorage.clear();
@@ -28,15 +30,29 @@ function Profile() {
         </Button>
       </Box>
       {
-        !favoriteMovies.length ? (
-          <Typography variant="h5">
-            Add favorites or watchlist some movies to see them here!
-          </Typography>
-        ) : (
-          <Box>
-            FAVORITE MOVIES
-          </Box>
-        )
+         !favoriteMovies ? (
+           <Typography variant="h5">
+             Add some movies to your favorite list to see them here!
+           </Typography>
+         ) : (
+           <Box>
+             FAVORITE MOVIES
+             <MovieList movies={favoriteMovies} />
+           </Box>
+         )
+      }
+
+      {
+         !watchlistMovies ? (
+           <Typography variant="h5">
+             Watchlist some movies to see them here!
+           </Typography>
+         ) : (
+           <Box>
+             WATCHLIST
+             <MovieList movies={watchlistMovies} />
+           </Box>
+         )
       }
     </Box>
   );

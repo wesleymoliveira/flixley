@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   Typography,
@@ -7,7 +7,6 @@ import {
   Grid,
   Box,
   CircularProgress,
-  useMediaQuery,
   Rating,
   ListItemIcon,
 } from '@mui/material';
@@ -31,21 +30,32 @@ import { selectGenreIdOrCategoryName } from '../../features/currentGenreIdOrCate
 import useStyles from './styles';
 import genreIcons from '../../assets/genres';
 import {
+  useGetListQuery,
   useGetMovieQuery,
   useGetRecomendationsQuery,
 } from '../../services/TMDB';
+import { userSelector } from '../../features/auth';
 
 function MovieInformation() {
+  const { isAuthenticated, sessionId, user } = useSelector(userSelector);
+
   const { id } = useParams();
+
   const { data, isFetching, error } = useGetMovieQuery(id);
+  const { data: favoriteMovies } = useGetListQuery({ accountId: user.id, listName: 'favorite/movies', sessionId, page: 1 });
+
+  console.log('favoriteMovies', favoriteMovies);
+
+  const { data: watchlistMovies } = useGetListQuery({ accountId: user.id, listName: 'watchlist/movies', sessionId, page: 1 });
   const {
     data: recomendedData,
     isFetching: recommendationsIsFetching,
     error: recommendationsError,
   } = useGetRecomendationsQuery({ movieId: id, list: '/recommendations' });
-  const [isFavorited, setIsFavorited] = React.useState(true);
-  const [isWatchListed, setIsWatchListed] = React.useState(true);
-  const [open, setOpen] = React.useState(false);
+
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isWatchListed, setIsWatchListed] = useState(true);
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -59,7 +69,7 @@ function MovieInformation() {
     );
   }
 
-  if (error) {
+  if (error || recommendationsError) {
     return (
       <Box
         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
@@ -69,12 +79,25 @@ function MovieInformation() {
     );
   }
 
-  const addToFavorites = () => {
-    console.log('Add to favorites');
+  /* useEffect(() => {
+    if (!isFetching && isAuthenticated) {
+      setIsFavorited(!!favoriteMovies?.results?.find((movie) => movie?.id === data?.id));
+      setIsWatchListed(!!watchlistMovies?.results?.find((movie) => movie?.id === data?.id));
+    }
+  }, [watchlistMovies, favoriteMovies, data, isFetching, isAuthenticated]); */
+
+  const addToFavorites = async () => {
+    await axios.post(`https://api.themoviedb.org/3/account/${user.id}/favorite?api_key=${process.env.REACT_APP_TMDB_KEY}&session_id=${localStorage.getItem('session_id')}`, { media_type: 'movie', media_id: id, favorite: !isFavorited });
+
+    setIsFavorited((prev) => !prev);
   };
 
-  const addToWatchlist = () => {
-    console.log('Add to watchlist');
+  const addToWatchlist = async () => {
+    await axios.post(`https://api.themoviedb.org/3/account/${user.id}/watchlist?api_key=${process.env.REACT_APP_TMDB_KEY}&session_id=${localStorage.getItem('session_id')}`, { media_type: 'movie',
+      media_id: id,
+      watchlist: !isWatchListed });
+
+    setIsWatchListed((prev) => !prev);
   };
 
   const handleTrailerModalClose = () => {
@@ -112,7 +135,7 @@ function MovieInformation() {
             {data?.runtime} min /{' '}
             {data?.spoken_languages.lenght > 1
               ? data?.spoken_languages
-                .map((language) => language.name)
+                .map((language) => language?.name)
                 .join(', ')
               : data?.spoken_languages[0].name}
           </Typography>
@@ -225,21 +248,28 @@ function MovieInformation() {
               )}
             </Grid>
             <Grid item xs={12} sm={6} className={classes.buttonsContainer}>
+
               <ButtonGroup variant="outlined" size="medium">
-                <Button
-                  onClick={addToFavorites}
-                  endIcon={
+                {
+                isAuthenticated && (
+                <>
+                  <Button
+                    onClick={addToFavorites}
+                    endIcon={
                     isFavorited ? <FavoriteBorderOutlined /> : <Favorite />
                   }
-                >
-                  Favorite
-                </Button>
-                <Button
-                  onClick={addToWatchlist}
-                  endIcon={isWatchListed ? <Remove /> : <PlusOne />}
-                >
-                  Watchlist
-                </Button>
+                  >
+                    Favorite
+                  </Button>
+                  <Button
+                    onClick={addToWatchlist}
+                    endIcon={isWatchListed ? <Remove /> : <PlusOne />}
+                  >
+                    Watchlist
+                  </Button>
+                </>
+                )
+                }
                 <Button
                   endIcon={<ArrowBack />}
                   sx={{ borderColor: 'primary.main' }}
@@ -260,15 +290,27 @@ function MovieInformation() {
         </Grid>
       </Grid>
       <Box marginTop="5rem" width="100%">
-        <Typography variant="h3" align="center" gutterBottom>
-          You might also like
-        </Typography>
-        {recomendedData ? (
-          <MovieList movies={recomendedData} numberOfMovies={12} />
+        { recommendationsIsFetching ? (
+
+          <Box
+            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+          >
+            <CircularProgress size="8rem" />
+          </Box>
         ) : (
-          <Typography variant="h5" align="center" gutterBottom>
-            No recommendations
-          </Typography>
+          <>
+
+            <Typography variant="h3" align="center" gutterBottom>
+              You might also like
+            </Typography>
+            {recomendedData ? (
+              <MovieList movies={recomendedData} numberOfMovies={12} />
+            ) : (
+              <Typography variant="h5" align="center" gutterBottom>
+                No recommendations
+              </Typography>
+            )}
+          </>
         )}
       </Box>
     </Grid>
