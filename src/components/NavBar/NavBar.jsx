@@ -92,7 +92,7 @@ function NavBar() {
                 }
                 <Avatar
                   style={isMobile ? { width: '30px', height: '30px' } : { width: '40px', height: '40px' }}
-                  src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png"
+                  src={`https://www.gravatar.com/avatar/${user.avatar.gravatar.hash}`}
                   alt="avatar"
                 />
               </Button>
@@ -127,7 +127,6 @@ function NavBar() {
             </Drawer>
           )
         }
-
         </nav>
       </div>
     </>

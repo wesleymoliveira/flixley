@@ -46,7 +46,7 @@ function useAlan() {
           }
         } else if (command === 'logout') {
           localStorage.clear();
-          navigate('/');
+          window.location.href = '/';
         }
       },
     });
