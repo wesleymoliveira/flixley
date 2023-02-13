@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Divider, List, ListItem, ListItemText, ListSubheader, ListItemIcon, Box, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { selectGenreIdOrCategoryName } from '../../features/currentGenreIdOrCategoryName';
 import { useGetGenresQuery } from '../../services/TMDB';
@@ -14,12 +14,17 @@ const mockCategories = [
   { label: 'Top Rated', value: 'top_rated' },
   { label: 'Upcoming', value: 'upcoming' }];
 
-function Sidebar() {
+function Sidebar({ setMobileOpen }) {
+  const { genreIdOrCategoryName } = useSelector((state) => state.currentGenreIdOrCategoryName);
   const theme = useTheme();
   const classes = useStyles();
 
   const { data, isFetching, isLoading } = useGetGenresQuery();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [genreIdOrCategoryName]);
 
   return (
     <>
