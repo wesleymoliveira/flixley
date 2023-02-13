@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, CircularProgress, Typography, Pagination } from '@mui/material';
+import { Box, CircularProgress, Typography, Pagination, useMediaQuery } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import { useGetMoviesQuery } from '../../services/TMDB';
@@ -7,6 +7,7 @@ import { FeaturedMovie, MovieList } from '..';
 
 function Movies() {
   const [page, setPage] = useState(1);
+  const isMobile = useMediaQuery('(max-width:600px)');
   const { genreIdOrCategoryName, searchQuery } = useSelector((state) => state.currentGenreIdOrCategoryName);
 
   const { data, isFetching, isLoading, error } = useGetMoviesQuery({ genreIdOrCategoryName, searchQuery, page });
@@ -45,7 +46,7 @@ function Movies() {
 
   return (
     <div>
-      <FeaturedMovie movie={data.results[0]} />
+      { !isMobile && <FeaturedMovie movie={data.results[0]} /> }
       <MovieList movies={data} numberOfMovies={data?.results?.length} />
       <Box display="flex" justifyContent="center" mt="20px">
         <Pagination count={data.total_pages} page={page} onChange={handlePageChange} color="primary" />

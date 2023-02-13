@@ -25,12 +25,14 @@ export default makeStyles((theme) => ({
     height: '100%',
     backgroundColor: 'rgba(0, 0, 0, 0.575)',
     backgroundBlendMode: 'darken',
+
   },
   featuredCardContent: {
     color: '#fff',
     width: '40%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
+
     },
   },
   featuredCardContentRoot: {
@@ -44,6 +46,12 @@ export default makeStyles((theme) => ({
     WebkitBoxOrient: 'vertical',
     WebkitLineClamp: 4,
 
+  },
+  featuredIcon: {
+    position: 'absolute',
+    top: '20px',
+    left: '20px',
+    color: '#fff',
   },
 
 }));
