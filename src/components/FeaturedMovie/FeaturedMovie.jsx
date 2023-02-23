@@ -11,10 +11,10 @@ function FeaturedMovie({ movie }) {
 
   if (!movie) return null;
 
-  const imgSrc = isMobile ? movie.poster_path : movie.backdrop_path;
+  const imgSrc = isMobile || !movie.backdrop_path ? movie.poster_path : movie.backdrop_path;
 
   return (
-    <Box component={Link} to={`/movie/${movie.id}`} className={classes.featuredCardContainer}>
+    <Box component={Link} to={`/movies/${movie.id}`} className={classes.featuredCardContainer}>
       <Card className={classes.featuredCard} classes={{ root: classes.cardRoot }}>
         <CardMedia className={classes.featuredCardMedia} media="picture" alt={movie.title} title={movie.title} image={`https://image.tmdb.org/t/p/original/${imgSrc}`} />
         <Box padding="20px">
