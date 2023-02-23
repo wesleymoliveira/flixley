@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Card, CardContent, CardMedia, useMediaQuery } from '@mui/material';
-import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'; import { Link } from 'react-router-dom';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import { Link } from 'react-router-dom';
 
 import useStyles from './styles';
 

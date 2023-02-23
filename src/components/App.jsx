@@ -3,7 +3,12 @@ import { CssBaseline } from '@mui/material';
 import { Route, Routes } from 'react-router-dom';
 import useStyles from './styles';
 
-import { Actors, Movies, MovieInformation, NavBar, Profile } from '.';
+import Actors from './Actors/Actors';
+import Movies from './Movies/Movies';
+import MovieInformation from './MovieInformation/MovieInformation';
+import NavBar from './NavBar/NavBar';
+import Profile from './Profile/Profile';
+
 import useAlan from './Alan';
 
 function App() {
