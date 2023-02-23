@@ -2,6 +2,9 @@
 
 ![Flixley preview](https://github.com/wesleymoliveira/flixley/blob/main/public/flixley-preview.png)
 
+Live Version! [Flixley - Live](https://flixley.netlify.app/)
+
+
 ## Getting Started
 
 First, run the development server:
