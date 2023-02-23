@@ -24,6 +24,7 @@ module.exports = {
     'linebreak-style': 0,
     'react/state-in-constructor': 0,
     'import/prefer-default-export': 0,
+    'no-console': 'off',
     'max-len': [
       2,
       250,
