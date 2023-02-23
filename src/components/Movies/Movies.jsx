@@ -3,7 +3,8 @@ import { Box, CircularProgress, Typography, Pagination, useMediaQuery } from '@m
 import { useSelector } from 'react-redux';
 
 import { useGetMoviesQuery } from '../../services/TMDB';
-import { FeaturedMovie, MovieList } from '..';
+import FeaturedMovie from '../FeaturedMovie/FeaturedMovie';
+import MovieList from '../MovieList/MovieList';
 
 function Movies() {
   const [page, setPage] = useState(1);

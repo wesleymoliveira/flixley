@@ -23,7 +23,7 @@ import {
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { MovieList } from '..';
+import MovieList from '../MovieList/MovieList';
 
 import { selectGenreIdOrCategoryName } from '../../features/currentGenreIdOrCategoryName';
 

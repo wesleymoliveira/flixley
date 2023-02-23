@@ -20,7 +20,7 @@ function NavBar() {
   const { isAuthenticated, user } = useSelector(userSelector);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const colorMode = useContext(ColorModeContext);
+  const { toggleColorMode } = useContext(ColorModeContext);
 
   const token = localStorage.getItem('request_token');
   const localStorageSessionId = localStorage.getItem('session_id');
@@ -63,7 +63,7 @@ function NavBar() {
       }
           <IconButton
             color="inherit"
-            onClick={() => colorMode.toggleColorMode()}
+            onClick={() => toggleColorMode()}
             sx={{ ml: 1 }}
           >
             {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}

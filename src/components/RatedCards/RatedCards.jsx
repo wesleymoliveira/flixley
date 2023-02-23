@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import useStyles from './styles';
-import { Movie } from '..';
+import Movie from '../Movie/Movie';
 
 function RatedCards({ title, movies }) {
   const classes = useStyles();
